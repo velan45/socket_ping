@@ -1,14 +1,10 @@
-// Server side C/C++ program to demonstrate Socket programming 
 #include <unistd.h> 
-#include <iostream> 
-#include <Winsock2.h>
+#include <stdio.h> 
+#include <sys/socket.h> 
 #include <stdlib.h> 
 #include <netinet/in.h> 
 #include <string.h> 
-#include <time.h>
 #define PORT 8080 
-using namespace std;
-
 int main(int argc, char const *argv[]) 
 { 
     int server_fd, new_socket, valread; 
@@ -17,10 +13,6 @@ int main(int argc, char const *argv[])
     int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
     char *hello = "Hello from server"; 
-	clock_t start, end;
-	double cpu_time_used;
-	start = clock();
-
        
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
@@ -30,7 +22,7 @@ int main(int argc, char const *argv[])
     } 
        
     // Forcefully attaching socket to the port 8080 
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, 
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
                                                   &opt, sizeof(opt))) 
     { 
         perror("setsockopt"); 
@@ -59,16 +51,8 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE); 
     } 
     valread = read( new_socket , buffer, 1024); 
-
-	//printf("sending server time");
-	end = clock();
-     cpu_time_used = ((double) (end - start));//CLOCKS_PER_SEC;
-	
-	cout << buffer << endl;
-   // printf("%s\n",buffer ); 
+    printf("%s\n",buffer ); 
     send(new_socket , buffer , strlen(buffer) , 0 ); 
-	//printf("%time=ld\n",cpu_time_used);
-   // printf("Hello message sent\n"); 
-	cout << "Hello message sent"<<endl;
+    printf("Hello message sent\n"); 
     return 0; 
-} 
+}  
