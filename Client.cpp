@@ -7,11 +7,13 @@
 #include <arpa/inet.h> 
 #include <unistd.h> 
 #include <string.h> 
+#include<string>
 #define PORT 8080 
 using namespace std;
 int main(int argc, char const *argv[]) 
 { 
 	int sock = 0, valread; 
+	unsigned int microseconds = 1000;
 	struct sockaddr_in serv_addr; 
 	char *hello = "Hello from client"; 
 	char buffer[1024] = {0}; 
@@ -39,17 +41,10 @@ int main(int argc, char const *argv[])
 	clock_t start, end;
 	for (int i=0; i<=100; i++)
 	{
-		char val[0] ;
-		val[0] = i;
-		char*final_str;
-	       final_str= (char*) malloc(sizeof(hello)*2 );
-	       if(!final_str)
-	       {
-		       cout << "memory allocation failed";
-		       exit(1);
-	       }
-		strcpy(final_str, hello);
-		strcat(final_str, val);
+		string val = to_string(i);
+		string final_str1 = " packet no:";
+		final_str1.append(val);
+		const char*final_str = final_str1.data(); 
 		
     send(sock , final_str , strlen(final_str) , 0 ); 
 	start = clock();
@@ -60,12 +55,13 @@ int main(int argc, char const *argv[])
 		cout << "packets are not same"<<endl;
 		continue;
 	}
+	usleep(microseconds);
 	end = clock();
 	double time_taken = double(end - start) / double(CLOCKS_PER_SEC); 
     cout << "Time taken by program is : " << fixed  
          << time_taken << end; 
     cout << " sec " << endl;
-   free(final_str);
+   
 	}
 
     return 0; 

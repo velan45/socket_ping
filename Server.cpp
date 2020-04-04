@@ -43,16 +43,24 @@ int main(int argc, char const *argv[])
     { 
         perror("listen"); 
         exit(EXIT_FAILURE); 
-    } 
+    }
+   printf("Listening for Connection\n"); 
     if ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
                        (socklen_t*)&addrlen))<0) 
     { 
         perror("accept"); 
         exit(EXIT_FAILURE); 
     } 
-    valread = read( new_socket , buffer, 1024); 
-    printf("%s\n",buffer ); 
+    while(1)
+    {
+	 valread = read( new_socket , buffer, 1024);
+	if(valread == 0)
+	{
+		printf(" Connection failed\n");
+		break;
+	}	
+	printf("%s\n",buffer ); 
     send(new_socket , buffer , strlen(buffer) , 0 ); 
-    printf("Hello message sent\n"); 
+    }
     return 0; 
 }  
