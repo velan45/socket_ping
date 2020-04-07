@@ -44,8 +44,9 @@ int main(int argc, char const *argv[])
 		printf("\nConnection Failed \n"); 
 		return -1; 
 	} 
-	clock_t start_pac, end_pac;
-	start_pac = clock();
+	
+	std::chrono::time_point<std::chrono::high_resolution_clock> start_pac, end_pac;
+	start_pac = std::chrono::high_resolution_clock::now();
 	for (int i=0; i<=100; i++)
 	{
 	// preparing data packet
@@ -55,16 +56,16 @@ int main(int argc, char const *argv[])
 	const char*final_str = final_str1.data(); 
 	
 	// Packet is prepared and waiting to send.	
-	auto t1 = std::chrono::high_resolution_clock::now();
+	
 	sleep(MICROSECONDS);
-	auto t2 = std::chrono::high_resolution_clock::now();
+	
 
-    	auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-	cout << float(duration) / 1000000 << "chrono" << endl;
+    
+	
 	//controller program starting counter	
-	clock_t start_SR = clock();	
+	auto start_SR = std::chrono::high_resolution_clock::now();	
 	send(sock , final_str , strlen(final_str) , 0 ); 
-	end_pac = clock();
+	
 	cout << "packet_sent"<<final_str << endl;
 	
 	// Going to recieve the packet_sent	
@@ -78,16 +79,20 @@ int main(int argc, char const *argv[])
 	}
 	
 	//stop the clock
-	clock_t end_SR = clock();
+	auto end_SR = std::chrono::high_resolution_clock::now();
 	
 	// round trip time calculation	
-	cout << " Round trip time of " << i << "is :" << time_diff(start_SR, end_SR) << endl;
+	auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>( end_SR - start_SR ).count();
+	cout << " Round trip time of " << i << "is :" << float(duration1) / 1000000 << endl;
 	
 	//between packet
-	cout << start_pac - end_pac<< "time diff" << endl;
-	cout << " Between Packet " << i << "and " << i+1 << " is :" << time_diff(start_pac, end_pac) << endl;
-	start_pac = end_pac; 
-    
+		
+	
+	end_pac = std::chrono::high_resolution_clock::now(); 
+    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( end_pac - start_pac ).count();
+	cout << " Between Packet " << i << "and " << i+1 << " is :" << float(duration2) / 1000000 << endl;
+	start_pac = end_pac;
+	
 	}
     return 0; 
 } 
