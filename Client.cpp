@@ -21,7 +21,6 @@ int main(int argc, char const *argv[])
 	int sock = 0, valread; 
 	
 	struct sockaddr_in serv_addr; 
-	char *hello = "Hello from client"; 
 	char buffer[1024] = {0}; 
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) //sock_stream(TCP) can be changed to sock_dgram(UDP)
 	{ 
@@ -44,7 +43,7 @@ int main(int argc, char const *argv[])
 		printf("\nConnection Failed \n"); 
 		return -1; 
 	} 
-	const clock_t start_pac, end_pac;
+	clock_t start_pac, end_pac;
 	start_pac = clock();
 	for (int i=0; i<=100; i++)
 	{
@@ -55,10 +54,11 @@ int main(int argc, char const *argv[])
 	const char*final_str = final_str1.data(); 
 	
 	// Packet is prepared and waiting to send.	
+	end_pac = clock();
 	usleep(MICROSECONDS);
 	
 	//controller program starting counter	
-	const clock_t start_SR = clock();	
+	clock_t start_SR = clock();	
 	send(sock , final_str , strlen(final_str) , 0 ); 
 	cout << "packet_sent"<<final_str << endl;
 	
@@ -73,14 +73,13 @@ int main(int argc, char const *argv[])
 	}
 	
 	//stop the clock
-	const clock_t end_SR = clock();
+	clock_t end_SR = clock();
 	
 	// round trip time calculation	
-	cout << " Round trip time of " << i << "is :" << time_diff(start_SR, end_SR);
+	cout << " Round trip time of " << i << "is :" << time_diff(start_SR, end_SR) << endl;
 	
 	//between packet
-	end_pac = clock();
-	cout << " Between Packet " << i << "and " << i+1 << " is :" << time_diff(start_pac, end_pac);
+	cout << " Between Packet " << i << "and " << i+1 << " is :" << time_diff(start_pac, end_pac) << endl;
 	start_pac = end_pac; 
     
 	}
