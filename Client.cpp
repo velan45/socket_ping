@@ -10,7 +10,7 @@
 #include<string>
 #include <chrono>
 #define PORT 8080 
-#define MICROSECONDS 1 // 1 seconds
+#define MICROSECONDS 10000 // microseconds 
 using namespace std;
 double time_diff( const clock_t start, const clock_t end )
 {
@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
 	
 	// Packet is prepared and waiting to send.	
 	
-	sleep(MICROSECONDS);
+	usleep(MICROSECONDS);
 	
 
     
@@ -83,14 +83,14 @@ int main(int argc, char const *argv[])
 	
 	// round trip time calculation	
 	auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>( end_SR - start_SR ).count();
-	cout << " Round trip time of " << i << "is :" << float(duration1) / 1000000 << endl;
+	cout << " Round trip time of " << i << "is :" << float(duration1) / 1000 << " miliseconds"  << endl;
 	
 	//between packet
 		
 	
 	end_pac = std::chrono::high_resolution_clock::now(); 
     auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( end_pac - start_pac ).count();
-	cout << " Between Packet " << i << "and " << i+1 << " is :" << float(duration2) / 1000000 << endl;
+	cout << " Between Packet " << i << "and " << i+1 << " is :" << float(duration2) / 1000  << " miliseconds" << endl;
 	start_pac = end_pac;
 	
 	}
