@@ -9,7 +9,7 @@
 #include <string.h> 
 #include<string>
 #define PORT 8080 
-#define MICROSECONDS 1000000 // 1 seconds
+#define MICROSECONDS 1000 // 1 seconds
 using namespace std;
 double time_diff( const clock_t start, const clock_t end )
 {
@@ -54,12 +54,13 @@ int main(int argc, char const *argv[])
 	const char*final_str = final_str1.data(); 
 	
 	// Packet is prepared and waiting to send.	
-	end_pac = clock();
-	usleep(MICROSECONDS);
+	
+	sleep(MICROSECONDS);
 	
 	//controller program starting counter	
 	clock_t start_SR = clock();	
 	send(sock , final_str , strlen(final_str) , 0 ); 
+	end_pac = clock();
 	cout << "packet_sent"<<final_str << endl;
 	
 	// Going to recieve the packet_sent	
