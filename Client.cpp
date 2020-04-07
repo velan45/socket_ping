@@ -8,8 +8,9 @@
 #include <unistd.h> 
 #include <string.h> 
 #include<string>
+#include <chrono>
 #define PORT 8080 
-#define MICROSECONDS 1000 // 1 seconds
+#define MICROSECONDS 1 // 1 seconds
 using namespace std;
 double time_diff( const clock_t start, const clock_t end )
 {
@@ -54,9 +55,12 @@ int main(int argc, char const *argv[])
 	const char*final_str = final_str1.data(); 
 	
 	// Packet is prepared and waiting to send.	
-	
+	auto t1 = std::chrono::high_resolution_clock::now();
 	sleep(MICROSECONDS);
-	
+	auto t2 = std::chrono::high_resolution_clock::now();
+
+    	auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+	cout << float(duration) / 1000000 << "chrono" << endl;
 	//controller program starting counter	
 	clock_t start_SR = clock();	
 	send(sock , final_str , strlen(final_str) , 0 ); 
@@ -80,6 +84,7 @@ int main(int argc, char const *argv[])
 	cout << " Round trip time of " << i << "is :" << time_diff(start_SR, end_SR) << endl;
 	
 	//between packet
+	cout << start_pac - end_pac<< "time diff" << endl;
 	cout << " Between Packet " << i << "and " << i+1 << " is :" << time_diff(start_pac, end_pac) << endl;
 	start_pac = end_pac; 
     
