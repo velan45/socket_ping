@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
 	len=sizeof(cliaddr);   
     while(1)
     {
-	
+	printf(" waiting to recieve the data\n");
 	n = recvfrom(server_fd, (char *)buffer,1024,  
                 MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
                 (socklen_t*)&len);  

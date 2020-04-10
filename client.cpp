@@ -12,17 +12,13 @@
 #define PORT 8080 
 #define MICROSECONDS 10000 // microseconds 
 using namespace std;
-double time_diff( const clock_t start, const clock_t end )
-{
-	double time_taken = double(end - start) / double(CLOCKS_PER_SEC); 
-    return time_taken;
-}
+
 int main(int argc, char const *argv[]) 
 { 
 	int sock = 0, valread;
 	
 	struct sockaddr_in servaddr; 
-	char *hello = "Hello from client";
+	//char *hello = "Hello from client";
 	char buffer[1024] = {0}; 
 	if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) //sock_stream(TCP) can be changed to sock_dgram(UDP)
 	{ 
@@ -33,7 +29,7 @@ int main(int argc, char const *argv[])
 	memset(&servaddr,0,sizeof(servaddr));
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
-	serv_addr.sin_addr = INADDR_ANY;
+	servaddr.sin_addr.s_addr = INADDR_ANY;
 	
 	// Convert IPv4 and IPv6 addresses from text to binary form 
 	/*if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
@@ -51,6 +47,9 @@ int main(int argc, char const *argv[])
 	
 	std::chrono::time_point<std::chrono::high_resolution_clock> start_pac, end_pac;
 	start_pac = std::chrono::high_resolution_clock::now();
+
+	socklen_t len;
+
 	for (int i=0; i<=10; i++)
 	{
 	// preparing data packet
@@ -62,9 +61,7 @@ int main(int argc, char const *argv[])
 	// Packet is prepared and waiting to send.	
 	
 	usleep(MICROSECONDS);
-	int n,len;
-
-    
+	int n;
 	
 	//controller program starting counter	
 	auto start_SR = std::chrono::high_resolution_clock::now();
