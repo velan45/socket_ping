@@ -1,5 +1,5 @@
 // Client side C/C++ program to demonstrate Socket programming 
-#include <bits/stdc++.h> 
+//#include <bits/stdc++.h> 
 #include<iostream>
 #include <stdlib.h>
 #include <stdio.h> 
@@ -10,7 +10,7 @@
 #include<string>
 #include <chrono>
 #define PORT 8081 //client port no 
-#define MICROSECONDS 10000 // microseconds 
+#define MICROSECONDS 1000000 // microseconds 
 using namespace std;
 
 int main(int argc, char const *argv[]) 
@@ -26,12 +26,15 @@ int main(int argc, char const *argv[])
 		cout << "Socket creation error"<<endl;
 		return -1; 
 	} 
-	memset(&servaddr,0,sizeof(sockadr_in));
+	memset(&servaddr,0,sizeof(sockaddr_in));
 	memset(&cliaddr, 0 , sizeof(sockaddr_in));
 	cliaddr.sin_family = AF_INET; 
 	cliaddr.sin_port = htons(PORT); 
-	cliaddr.sin_addr.s_addr = INADDR_LOOPBACK; //ip address of 127.0.0.1
+	cliaddr.sin_addr.s_addr = INADDR_ANY; //ip address of 127.0.0.1
 	
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_port = htons(8080);
+	servaddr.sin_addr.s_addr = INADDR_ANY;
 	// Convert IPv4 and IPv6 addresses from text to binary form 
 	/*if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
 	{ 
@@ -47,10 +50,12 @@ int main(int argc, char const *argv[])
 	} */
 	
 	
-	if(bind(sock, (struct sockaddr_in*) &cliaddr, sizeof(struct sockaddr_in)) == -1)
+	if(bind(sock, (const sockaddr*) &cliaddr, sizeof(struct sockaddr_in)) == -1)
 	{
 		
 		cout << " bind failed " << endl;
+		perror("bind failed");
+		exit(EXIT_FAILURE);
 	}
 	std::chrono::time_point<std::chrono::high_resolution_clock> start_pac, end_pac;
 	start_pac = std::chrono::high_resolution_clock::now();
@@ -75,7 +80,7 @@ int main(int argc, char const *argv[])
 	auto start_SR = std::chrono::high_resolution_clock::now();
 
 	sendto(sock, final_str, strlen(final_str), 
-        MSG_CONFIRM, (struct sockaddr_in *) &servaddr, sizeof(sockaddr_in));	
+        MSG_CONFIRM, (const sockaddr*) &servaddr, sizeof(sockaddr_in));	
 
 	//send(sock , final_str , strlen(final_str) , 0 ); 
 	
