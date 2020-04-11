@@ -9,7 +9,7 @@
 #include <string.h> 
 #include<string>
 #include <chrono>
-#define PORT 8080 
+#define PORT 8081 //client port no 
 #define MICROSECONDS 10000 // microseconds 
 using namespace std;
 
@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 { 
 	int sock = 0, valread;
 	
-	struct sockaddr_in servaddr; 
+	struct sockaddr_in servaddr, cliaddr; 
 	//char *hello = "Hello from client";
 	char buffer[1024] = {0}; 
 	if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) //sock_stream(TCP) can be changed to sock_dgram(UDP)
@@ -26,10 +26,11 @@ int main(int argc, char const *argv[])
 		cout << "Socket creation error"<<endl;
 		return -1; 
 	} 
-	memset(&servaddr,0,sizeof(servaddr));
-	servaddr.sin_family = AF_INET; 
-	servaddr.sin_port = htons(PORT); 
-	servaddr.sin_addr.s_addr = INADDR_ANY;
+	memset(&servaddr,0,sizeof(sockadr_in));
+	memset(&cliaddr, 0 , sizeof(sockaddr_in));
+	cliaddr.sin_family = AF_INET; 
+	cliaddr.sin_port = htons(PORT); 
+	cliaddr.sin_addr.s_addr = INADDR_LOOPBACK; //ip address of 127.0.0.1
 	
 	// Convert IPv4 and IPv6 addresses from text to binary form 
 	/*if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
@@ -45,10 +46,17 @@ int main(int argc, char const *argv[])
 		return -1; 
 	} */
 	
+	
+	if(bind(sock, (struct sockaddr_in*) &cliaddr, sizeof(struct sockaddr_in)) == -1)
+	{
+		
+		cout << " bind failed " << endl;
+	}
 	std::chrono::time_point<std::chrono::high_resolution_clock> start_pac, end_pac;
 	start_pac = std::chrono::high_resolution_clock::now();
 
 	socklen_t len;
+	len = sizeof(struct sockaddr_in);
 
 	for (int i=0; i<=10; i++)
 	{
@@ -67,7 +75,7 @@ int main(int argc, char const *argv[])
 	auto start_SR = std::chrono::high_resolution_clock::now();
 
 	sendto(sock, final_str, strlen(final_str), 
-        MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));	
+        MSG_CONFIRM, (struct sockaddr_in *) &servaddr, sizeof(sockaddr_in));	
 
 	//send(sock , final_str , strlen(final_str) , 0 ); 
 	

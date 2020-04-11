@@ -13,16 +13,15 @@
 using namespace std;
 int main(int argc, char const *argv[]) 
 { 
-    //char *hello = "Hello from server";
     int server_fd, valread; 
-    struct sockaddr_in servaddr,cliaddr; 
+    struct sockaddr_in servaddr,cliaddr; //IPV4 address is stored in sockaddr_in,
     int opt = 1; 
    // int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
 
        
     // Creating socket file descriptor 
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) <0) 
+    if ((server_fd = socket(AF_INET, SOCK_DGRAM, 0)) <0) //IPV4 socket AF_INET
     { 
         perror("socket failed"); 
         exit(EXIT_FAILURE); 
@@ -31,7 +30,7 @@ int main(int argc, char const *argv[])
     memset(&servaddr,0,sizeof(servaddr));
 	memset(&cliaddr,0,sizeof(cliaddr));
     servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = INADDR_ANY; 
+    servaddr.sin_addr.s_addr = INADDR_LOOPBACK; //ip address of 127.0.0.1
     servaddr.sin_port = htons( PORT );   
 	
     // Forcefully attaching socket to the port 8080 
@@ -51,7 +50,8 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE); 
     } 
     
-	int len,n;
+	int n;
+	socklen_t len;
 	len=sizeof(cliaddr);   
     while(1)
     {
