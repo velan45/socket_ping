@@ -9,11 +9,11 @@
 #include <string.h> 
 #include<string>
 #include <chrono>
-#define ITER 100
+#define ITER 10
 #include <vector>
 
 #define PORT 8081 //client port no 
-#define MICROSECONDS 1000000 // microseconds 
+#define MICROSECONDS 10000 // microseconds 
 using namespace std;
 
 
@@ -68,6 +68,7 @@ int main(int argc, char const *argv[])
 	socklen_t len;
 	len = sizeof(struct sockaddr_in);
 
+
 	for (int i=0; i<=ITER; i++)
 	{
 	// preparing data packet
@@ -81,7 +82,6 @@ int main(int argc, char const *argv[])
 	usleep(MICROSECONDS);
 	int n;
 
-	vector<float> durArray(ITER, 0);
 	//controller program starting counter	
 	auto start_SR = std::chrono::high_resolution_clock::now();
 
@@ -117,9 +117,9 @@ int main(int argc, char const *argv[])
 		
 
 	end_pac = std::chrono::high_resolution_clock::now(); 
-    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( end_pac - start_pac ).count();
+	auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( end_pac - start_pac ).count();
 	cout << " Between Packet " << i << "and " << i+1 << " is :" << float(duration2) / 1000  << " miliseconds" << endl;
-			durArray[i]= float(duration1);
+	durArray[i]= float(duration1)/1000;
 
 	start_pac = end_pac;
 }
@@ -129,18 +129,15 @@ int main(int argc, char const *argv[])
 	Worst_Time = *max_element(durArray.begin(), durArray.end());
 
 
-	cout<<"Best_Time = "<< float(Best_Time) << "miliseconds" <<endl;
+	cout<<"Best_Time = "<< (Best_Time) << "miliseconds" <<endl;
 	cout<<"Worst_Time = "<< float(Worst_Time) << "miliseconds" <<endl;
 
 	Average_Time = 0;
 	for (int i=0; i<=ITER; i++)
 	{
-		
-		
 
 		Average_Time = Average_Time + durArray[i];
-		//cout << "durArray[i]" << float(durArray[i])/1000 << endl;
-		
+
 	}
 	Average_Time = (float (Average_Time)) / ITER;
 
