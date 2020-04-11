@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
     memset(&servaddr,0,sizeof(servaddr));
 	memset(&cliaddr,0,sizeof(cliaddr));
     servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = INADDR_LOOPBACK; //ip address of 127.0.0.1
+    servaddr.sin_addr.s_addr = INADDR_ANY; //ip address of 127.0.0.1
     servaddr.sin_port = htons( PORT );   
 	
     // Forcefully attaching socket to the port 8080 
